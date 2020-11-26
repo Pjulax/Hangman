@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"pl.polsl.lab.hangman"},{"l":"pl.polsl.lab.hangman.contoller"},{"l":"pl.polsl.lab.hangman.model"},{"l":"pl.polsl.lab.hangman.utils"},{"l":"pl.polsl.lab.hangman.view"}]
