@@ -2,11 +2,16 @@ package pl.polsl.lab.hangman.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
+import pl.polsl.lab.hangman.model.Hangman;
+import pl.polsl.lab.hangman.model.HangmanGameState;
 
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.util.*;
 
 /**
  * View class, provides methods to print games state for user.
@@ -14,11 +19,43 @@ import java.util.ResourceBundle;
  */
 public class HangmanView implements Initializable {
 
+    private Hangman hangman;
+    @FXML
+    private Button guessButton;
+    @FXML
+    private Text errorText;
+    @FXML
+    private Text viewWordText;
+    @FXML
+    private Text mismatchText;
+    @FXML
+    private TextField guessedValueBox;
     @FXML
     private ImageView imageView1;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        /*        List<String> words = new ArrayList<>();
+        words.add("forest");
+        words.add("sword");
+        words.add("union");
+        words.add("collection");
+        words.add("company");
+        words.add("city"};*/
+        List<String> words = new ArrayList<>();
+        words.add("kartka");
+        words.add("tekst");
+        words.add("bażant");
+        words.add("komplikacja");
+        words.add("lama");
+        words.add("zwierze");
+        words.add("teczka");
+
+        Random random = new Random(new Date().getTime());
+        String choosenWord = words.get(Math.abs(random.nextInt() % words.size()));
+        hangman = new Hangman(choosenWord);
+        viewWordText.setText(getWordFormatted(hangman.getViewWord()));
+        //mismatchText.setText("Mismatched count: " + hangman.getMismatchCount());
         Image image;
         try {
             image = new Image(getClass().getResourceAsStream("/drawings/zero.png"));
@@ -31,163 +68,78 @@ public class HangmanView implements Initializable {
     @FXML
     public void onGuessClick(){
         try {
-            Image image = new Image(getClass().getResourceAsStream("/drawings/eight.png"));
-            imageView1.setImage(image);
+            errorText.setVisible(false);
+            String text = guessedValueBox.getText();
+            hangman.handleGuessedValue(text);
+            refreshView();
+        } catch(IllegalArgumentException e){
+            errorText.setVisible(true);
         } catch(Exception e){
             e.printStackTrace();
         }
     }
 
     /**
-     * Provides Logo "Hangman" as first view seen in console.
-     */
-    public void printFirstView(){
-        System.out.print(" __    __\n");
-        System.out.print("|  \\  |  \\\n");
-        System.out.print("| $$  | $$  ______   _______    ______   ______ ____    ______   _______\n");
-        System.out.print("| $$__| $$ |      \\ |       \\  /      \\ |      \\    \\  |      \\ |       \\\n");
-        System.out.print("| $$    $$  \\$$$$$$\\| $$$$$$$\\|  $$$$$$\\| $$$$$$\\$$$$\\  \\$$$$$$\\| $$$$$$$\\\n");
-        System.out.print("| $$$$$$$$ /      $$| $$  | $$| $$  | $$| $$ | $$ | $$ /      $$| $$  | $$\n");
-        System.out.print("| $$  | $$|  $$$$$$$| $$  | $$| $$__| $$| $$ | $$ | $$|  $$$$$$$| $$  | $$\n");
-        System.out.print("| $$  | $$ \\$$    $$| $$  | $$ \\$$    $$| $$ | $$ | $$ \\$$    $$| $$  | $$\n");
-        System.out.print(" \\$$   \\$$  \\$$$$$$$ \\$$   \\$$ _\\$$$$$$$ \\$$  \\$$  \\$$  \\$$$$$$$ \\$$   \\$$\n");
-        System.out.print("                               | \\__| $$\n");
-        System.out.print("                                \\$$   $$\n");
-        System.out.print("                                 \\$$$$$$\n");
-        System.out.print("\n");
-    }
-
-    /**
      * Method views actual state of the game. Views hangmans image,
      * state of word, letters used to guess and how many mismatches
      * actually were made.
-     * @param actualWord    String word with revealed only guessed letters
-     * @param lettersUsed   String containing letters used, while trying to guess
-     * @param mismatchCount Integer number of mismatches since start of the game
      */
-    public void refreshView(String actualWord, String lettersUsed, Integer mismatchCount) {
-        if(mismatchCount >= 0 && mismatchCount < 10) {
-            switch (mismatchCount) {
+    public void refreshView() {
+        Image image;
+        viewWordText.setText(getWordFormatted(hangman.getViewWord()));
+        mismatchText.setText("Mismatched count: " + hangman.getMismatchCount());
+        if(hangman.isWordGuessed()) {
+            guessedValueBox.setDisable(true);
+            guessButton.setDisable(true);
+            hangman.setGameState(HangmanGameState.FINISHED);
+            image = new Image(getClass().getResourceAsStream("/drawings/win.png"));
+            imageView1.setImage(image);
+        }
+        else if(hangman.getMismatchCount() >= 0 && hangman.getMismatchCount() <= 10) {
+            String screenNumber = "";
+            switch (hangman.getMismatchCount()) {
+                case 0:
+                    screenNumber = "zero";
+                    break;
                 case 1:
-                    System.out.print("=================================================\n" +
-                            "\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "=================================================\n" +
-                            "===              First mismatch               ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "one";
                     break;
                 case 2:
-                    System.out.print("=================================================\n" +
-                            "\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===              Second mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "two";
                     break;
                 case 3:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===               Third mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "three";
                     break;
                 case 4:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |      |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===              Fourth mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "four";
                     break;
                 case 5:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |      |\n" +
-                            "     |      @\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===               Fifth mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "five";
                     break;
                 case 6:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |      |\n" +
-                            "     |      @\n" +
-                            "     |      |\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===               Sixth mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "six";
                     break;
                 case 7:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |      |\n" +
-                            "     |      @\n" +
-                            "     |     /|\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===             Seventh mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "seven";
                     break;
                 case 8:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |      |\n" +
-                            "     |      @\n" +
-                            "     |     /|\\\n" +
-                            "     |\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===              Eighth mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "eight";
                     break;
                 case 9:
-                    System.out.print("=================================================\n" +
-                            "      ______\n" +
-                            "     |      |\n" +
-                            "     |      @\n" +
-                            "     |     /|\\\n" +
-                            "     |     /\n" +
-                            "     |\n" +
-                            "    /|\\\n" +
-                            "=================================================\n" +
-                            "===               Ninth mismatch              ===\n" +
-                            "=================================================\n\n");
+                    screenNumber = "nine";
+                    break;
+                case 10:
+                    screenNumber = "ten";
+                    hangman.setGameState(HangmanGameState.FINISHED);
+                    guessedValueBox.setDisable(true);
+                    guessButton.setDisable(true);
                     break;
             }
-            System.out.println("Actual state of word: " + getWordFormatted(actualWord));
-            System.out.println("Actually used letters: " + lettersUsed);
+            image = new Image(getClass().getResourceAsStream("/drawings/" + screenNumber + ".png"));
+            imageView1.setImage(image);
+            //todo - make tree view of "containing and missed" letters
+
+            // System.out.println("Actually used letters: " + lettersUsed);
         }
         else {
             throw new IllegalArgumentException("Mismatch count corrupted, game is ending right now.");
@@ -218,22 +170,14 @@ public class HangmanView implements Initializable {
      * @param mismatchCount Count of mismatches during the game
      */
     public void printFinalView(boolean isWon, String chosenWord, int mismatchCount){
+        Image image;
         if(isWon) {
-            System.out.println("Congratulations, you won!\nYou guessed \"" + chosenWord + "\" with " + mismatchCount + " mismatches.");
+            image = new Image(getClass().getResourceAsStream("/drawings/win.png"));
+            imageView1.setImage(image);
         }
         else{
-            System.out.print(   "=================================================\n" +
-                                "      ______\n" +
-                                "     |      |\n" +
-                                "     |      @\n" +
-                                "     |     /|\\\n" +
-                                "     |     / \\\n" +
-                                "     |\n" +
-                                "    /|\\\n" +
-                                "=================================================\n" +
-                                "===                 GAME OVER                 ===\n" +
-                                "=================================================\n\n");
-            System.out.println("You lost :(\nWord to guess was \"" + chosenWord + "\", it's not your lucky day.");
+            image = new Image(getClass().getResourceAsStream("/drawings/ten.png"));
+            imageView1.setImage(image);
         }
     }
 }

@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HangmanWelcomeView implements Initializable {
+public class HangmanWelcomeViewController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -24,7 +24,7 @@ public class HangmanWelcomeView implements Initializable {
             System.out.println("Clicked start :)");
             Stage stage = new Stage();
             stage.setTitle("Pawel Potuczko");
-            FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("HangmanView" + ".fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HangmanView.fxml"));
             Parent root = fxmlLoader.load();
 
             stage.setScene(new Scene(root, 800, 600));

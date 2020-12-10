@@ -8,12 +8,14 @@ package pl.polsl.lab.hangman.model;
 public class Hangman {
 
     private Integer mismatchCount;
+    private HangmanGameState gameState;
     private String viewWord;
     private final String chosenWord;
     private final UsedCharactersList usedCharacters;
 
     public Hangman(String chosenWord) {
         this.mismatchCount = 0;
+        this.gameState = HangmanGameState.IN_PROGRESS;
         this.chosenWord = chosenWord;
         this.usedCharacters = new UsedCharactersList();
         this.viewWord = initViewWord(chosenWord);
@@ -137,5 +139,13 @@ public class Hangman {
 
     public Integer getMismatchCount() {
         return mismatchCount;
+    }
+
+    public HangmanGameState getGameState() {
+        return gameState;
+    }
+
+    public void setGameState(HangmanGameState gameState) {
+        this.gameState = gameState;
     }
 }

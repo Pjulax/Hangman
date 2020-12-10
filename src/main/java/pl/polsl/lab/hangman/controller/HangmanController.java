@@ -1,11 +1,12 @@
-package pl.polsl.lab.hangman.contoller;
+package pl.polsl.lab.hangman.controller;
 
 import pl.polsl.lab.hangman.model.Hangman;
+import pl.polsl.lab.hangman.model.HangmanGameState;
 import pl.polsl.lab.hangman.view.HangmanView;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;
-
+//todo - delete this
 /**
  * Base controller of whole Hangman application. Provides methods controlling flow of the game between view and models.
  * @author Pawel Potuczko
@@ -25,17 +26,10 @@ public class HangmanController {
     }
 
     /**
-     * Calls view to print logo to output.
-     */
-    public void printFirstView(){
-        hangmanView.printFirstView();
-    }
-
-    /**
      * Calls view to print refreshed actual state of game.
      */
     public void refresh() throws IllegalArgumentException{
-        hangmanView.refreshView(hangman.getViewWord(), hangman.getUsedCharacters(), hangman.getMismatchCount());
+        //hangmanView.refreshView(hangman.getViewWord(), hangman.getUsedCharacters(), hangman.getMismatchCount());
     }
 
     /**

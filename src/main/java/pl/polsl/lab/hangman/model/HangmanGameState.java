@@ -1,4 +1,4 @@
-package pl.polsl.lab.hangman.contoller;
+package pl.polsl.lab.hangman.model;
 
 /**
  * Enum that provides basic game state information

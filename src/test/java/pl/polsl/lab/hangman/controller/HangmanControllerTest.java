@@ -1,7 +1,8 @@
-package pl.polsl.lab.hangman.contoller;
+package pl.polsl.lab.hangman.controller;
 
 import org.junit.jupiter.api.Test;
 import pl.polsl.lab.hangman.model.Hangman;
+import pl.polsl.lab.hangman.model.HangmanGameState;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
