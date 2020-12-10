@@ -2,7 +2,6 @@ package pl.polsl.lab.hangman.contoller;
 
 import pl.polsl.lab.hangman.model.Hangman;
 import pl.polsl.lab.hangman.view.HangmanView;
-import pl.polsl.lab.hangman.view.HangmanViewController;
 
 import java.io.IOException;
 import java.util.NoSuchElementException;

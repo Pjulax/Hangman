@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="pl.polsl.lab.hangman.view.HangmanView">
+
+      <ImageView fx:id="imageView1" fitHeight="350.0" fitWidth="550.0" layoutX="24.0" layoutY="24.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../../../../drawings/three.png" />
+      </image></ImageView>
+       <Text layoutX="38.0" layoutY="393.0" text="Mismatched count:" wrappingWidth="206.068359375">
+      <font>
+         <Font size="18.0" />
+      </font></Text>
+       <Text layoutX="119.0" layoutY="481.0" text="Guess letter or word:" wrappingWidth="206.068359375">
+      <font>
+         <Font size="18.0" />
+      </font></Text>
+      <Button layoutX="401.0" layoutY="498.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="66.0" text="Guess" onAction="#onGuessClick">
+      <font>
+         <Font name="System Bold" size="14.0" />
+      </font></Button>
+      <TextField layoutX="111.0" layoutY="493.0" prefHeight="39.0" prefWidth="270.0">
+      <font>
+         <Font size="18.0" />
+      </font></TextField>
+      <TableView layoutX="593.0" layoutY="24.0" prefHeight="557.0" prefWidth="183.0">
+        <columns>
+          <TableColumn prefWidth="100.0" text="Used characters" />
+        </columns>
+      </TableView>
+
+</AnchorPane>

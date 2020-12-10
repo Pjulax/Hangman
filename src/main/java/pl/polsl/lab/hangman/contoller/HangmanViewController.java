@@ -1,4 +1,4 @@
-package pl.polsl.lab.hangman.view;
+package pl.polsl.lab.hangman.contoller;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -11,6 +11,8 @@ public class HangmanViewController {
 
     private final Scanner sc;
 
+
+
     public HangmanViewController(Scanner sc) {
         this.sc = sc;
     }
@@ -22,7 +24,7 @@ public class HangmanViewController {
      */
     public String getInput() throws IOException {
         System.out.println("Answer with letter or full word: ");
-        String text = null;
+        String text;
         if (sc.hasNextLine()) {
             text = sc.nextLine();
             return text;

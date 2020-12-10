@@ -1,10 +1,16 @@
 package pl.polsl.lab.hangman;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.stage.Stage;
 import pl.polsl.lab.hangman.contoller.HangmanController;
 import pl.polsl.lab.hangman.contoller.HangmanGameState;
 import pl.polsl.lab.hangman.model.Hangman;
 import pl.polsl.lab.hangman.view.HangmanView;
-import pl.polsl.lab.hangman.view.HangmanViewController;
+import pl.polsl.lab.hangman.contoller.HangmanViewController;
 
 import java.io.IOException;
 import java.util.*;
@@ -16,7 +22,9 @@ import java.util.*;
  * @author Pawel Potuczko
  * @version 1.0
  */
-public class Application {
+public class Application extends javafx.application.Application {
+
+    public static Stage stg;
 
     /**
      * In main are initialized words table, model, view and controllers. Word to guess
@@ -48,6 +56,8 @@ public class Application {
         HangmanViewController hangmanViewController = new HangmanViewController(new Scanner(System.in));
         HangmanController hangmanController = new HangmanController(hangman, hangmanView, hangmanViewController);
 
+        launch(args);
+
         try {
             hangmanController.printFirstView();
 
@@ -65,5 +75,16 @@ public class Application {
         catch (IllegalArgumentException | IOException ex){
             System.out.println(ex.getMessage());
         }
+    }
+
+    @Override
+    public void start(Stage stage) throws Exception {
+        stg = stage;
+        stage.setTitle("Pawel Potuczko");
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("HangmanWelcomeView" + ".fxml"));
+        Parent root = fxmlLoader.load();
+
+        stage.setScene(new Scene(root, 800,600));
+        stage.show();
     }
 }

@@ -1,10 +1,42 @@
 package pl.polsl.lab.hangman.view;
 
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+
+import java.net.URL;
+import java.util.ResourceBundle;
+
 /**
  * View class, provides methods to print games state for user.
  * @author Pawel Potuczko
  */
-public class HangmanView {
+public class HangmanView implements Initializable {
+
+    @FXML
+    private ImageView imageView1;
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        Image image;
+        try {
+            image = new Image(getClass().getResourceAsStream("/drawings/zero.png"));
+            imageView1.setImage(image);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
+    public void onGuessClick(){
+        try {
+            Image image = new Image(getClass().getResourceAsStream("/drawings/eight.png"));
+            imageView1.setImage(image);
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     /**
      * Provides Logo "Hangman" as first view seen in console.

@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class HangmanTest {
 
-    static Hangman hangman = new Hangman("abcdefghijklmn");
+    private final Hangman hangman = new Hangman("abcdefghijklmn");
 
     @ParameterizedTest
     @CsvSource({"test", "tEst", "Java", "1", "123", "$", "ł", "ż", "Ź","abcdefghiJklMn"})
