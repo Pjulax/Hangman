@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
@@ -20,6 +22,8 @@ import java.util.*;
 public class HangmanView implements Initializable {
 
     private Hangman hangman;
+    @FXML
+    private TreeView usedCharactersTreeView;
     @FXML
     private Button guessButton;
     @FXML
@@ -63,6 +67,16 @@ public class HangmanView implements Initializable {
         } catch(Exception e){
             e.printStackTrace();
         }
+
+        TreeItem containingItem = new TreeItem("Contained");
+        TreeItem notContainingItem = new TreeItem("Not contained");
+        ArrayList<TreeItem> firstColumn = new ArrayList<>();
+        firstColumn.add(containingItem);
+        firstColumn.add(notContainingItem);
+
+        TreeItem rootItem = new TreeItem("Used characters");
+        rootItem.getChildren().addAll(firstColumn);
+        this.usedCharactersTreeView.setRoot(rootItem);
     }
 
     @FXML
@@ -138,12 +152,41 @@ public class HangmanView implements Initializable {
             image = new Image(getClass().getResourceAsStream("/drawings/" + screenNumber + ".png"));
             imageView1.setImage(image);
             //todo - make tree view of "containing and missed" letters
-
+            usedCharactersTreeView.setRoot(getRefreshedList());
+            usedCharactersTreeView.getRoot().setExpanded(true);
             // System.out.println("Actually used letters: " + lettersUsed);
         }
         else {
             throw new IllegalArgumentException("Mismatch count corrupted, game is ending right now.");
         }
+    }
+
+    private TreeItem getRefreshedList() {
+        TreeItem containingItem = new TreeItem("Contained");
+        TreeItem notContainingItem = new TreeItem("Not contained");
+
+        containingItem.setExpanded(true);
+        notContainingItem.setExpanded(true);
+
+        List<TreeItem> containedUsedCharactersList = convertCharacterListToTreeItemList(hangman.getContainingUsedCharactersList());
+        List<TreeItem> notContainedUsedCharactersList = convertCharacterListToTreeItemList(hangman.getNotContainingUsedCharactersList());
+        containingItem.getChildren().addAll(containedUsedCharactersList);
+        notContainingItem.getChildren().addAll(notContainedUsedCharactersList);
+        ArrayList<TreeItem> firstColumn = new ArrayList<>();
+        firstColumn.add(containingItem);
+        firstColumn.add(notContainingItem);
+
+        TreeItem rootItem = new TreeItem("Used characters");
+        rootItem.getChildren().addAll(firstColumn);
+        return rootItem;
+    }
+
+    private List<TreeItem> convertCharacterListToTreeItemList(List<Character> characters) {
+        ArrayList<TreeItem> characterItemList = new ArrayList<>();
+        for ( Character c : characters ) {
+            characterItemList.add(new TreeItem(c.toString()));
+        }
+        return characterItemList;
     }
 
     /**

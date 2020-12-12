@@ -8,7 +8,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import pl.polsl.lab.hangman.Application;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -19,7 +18,7 @@ public class HangmanWelcomeViewController implements Initializable {
     }
 
     @FXML
-    public void onStartButtonClicked() throws IOException {
+    public void onStartButtonClicked() {
         try {
             System.out.println("Clicked start :)");
             Stage stage = new Stage();

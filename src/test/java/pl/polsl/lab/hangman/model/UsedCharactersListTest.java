@@ -18,10 +18,10 @@ class UsedCharactersListTest {
     @ParameterizedTest
     @CsvSource({"a,b,c,d","c,d,q,r"})
     void addUsedCharacterShouldAddManyTest(char letter1, char letter2, char letter3, char letter4) {
-        usedCharactersList.addUsedCharacter(letter1);
-        usedCharactersList.addUsedCharacter(letter2);
-        usedCharactersList.addUsedCharacter(letter3);
-        usedCharactersList.addUsedCharacter(letter4);
+        usedCharactersList.addUsedCharacter(letter1,false);
+        usedCharactersList.addUsedCharacter(letter2, true);
+        usedCharactersList.addUsedCharacter(letter3,false);
+        usedCharactersList.addUsedCharacter(letter4, true);
         List<Character> letters = List.of(letter1, letter2, letter3, letter4);
         ICharactersListToUsedCharactersString lambdaMakingUnexpectedValue = () -> letters.stream().map(String::valueOf).collect(Collectors.joining(", "));
 
@@ -33,7 +33,7 @@ class UsedCharactersListTest {
     void addUsedCharacterShouldNotAddDuplicatesTest(char letter1, char letter2, char letter3) {
         List<Character> letters = List.of(letter1, letter2, letter3);
         for(Character letter : letters){
-            usedCharactersList.addUsedCharacter(letter);
+            usedCharactersList.addUsedCharacter(letter, true);
         }
         ICharactersListToUsedCharactersString lambdaMakingUnexpectedValue = () -> letters.stream().map(String::valueOf).collect(Collectors.joining(", "));
 

@@ -25,11 +25,6 @@
       <font>
          <Font size="18.0" />
       </font></TextField>
-      <TableView layoutX="593.0" layoutY="24.0" prefHeight="557.0" prefWidth="183.0">
-        <columns>
-          <TableColumn prefWidth="100.0" text="Used characters" />
-        </columns>
-      </TableView>
    <Text fx:id="viewWordText" layoutX="41.0" layoutY="409.0" strokeType="OUTSIDE" strokeWidth="0.0" text="WORD" wrappingWidth="516.0">
       <font>
          <Font name="System Bold" size="32.0" />
@@ -39,5 +34,6 @@
          <Font size="18.0" />
       </font>
    </Text>
+   <TreeView fx:id="usedCharactersTreeView" layoutX="595.0" layoutY="24.0" prefHeight="497.0" prefWidth="183.0" />
 
 </AnchorPane>

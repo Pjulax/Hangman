@@ -1,5 +1,7 @@
 package pl.polsl.lab.hangman.model;
 
+import java.util.List;
+
 /**
  * Model of data needed to keep state of hangman game.
  * Provides method to modify it's state.
@@ -89,11 +91,14 @@ public class Hangman {
      * @param letter    Character passed by user
      */
     private void handleLetterGuess(Character letter) {
-        usedCharacters.addUsedCharacter(letter);
-        if(isWordContainingLetter(letter))
+        if(isWordContainingLetter(letter)) {
+            usedCharacters.addUsedCharacter(letter, true);
             revealGuessedLetterInViewWord(letter);
-        else
+        }
+        else{
+            usedCharacters.addUsedCharacter(letter, false);
             mismatchCount++;
+        }
     }
 
     /**
@@ -137,6 +142,19 @@ public class Hangman {
         return usedCharacters.toString();
     }
 
+    /**
+     * @return list of contained in word  used characters
+     */
+    public List<Character> getContainingUsedCharactersList(){
+        return usedCharacters.getLettersContained();
+    }
+
+    /**
+     * @return list of not contained in word used characters
+     */
+    public List<Character> getNotContainingUsedCharactersList(){
+        return usedCharacters.getLettersNotContained();
+    }
     public Integer getMismatchCount() {
         return mismatchCount;
     }
