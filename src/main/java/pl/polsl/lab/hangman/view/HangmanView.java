@@ -2,15 +2,11 @@ package pl.polsl.lab.hangman.view;
 
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 import pl.polsl.lab.hangman.model.Hangman;
-import pl.polsl.lab.hangman.model.HangmanGameState;
 
 import java.net.URL;
 import java.util.*;
@@ -39,6 +35,35 @@ public class HangmanView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        String chosenWord = getRandomWord();
+        this.hangman = new Hangman(chosenWord);
+        this.viewWordText.setText(getWordFormatted(hangman.getViewWord()));
+        this.mismatchText.setText("Mismatched count: 0");
+        try {
+            Image image = new Image(getClass().getResourceAsStream("/drawings/zero.png"));
+            imageView1.setImage(image);
+        } catch(Exception e){
+            Alert alert = ExceptionAlertView.getAlert("Exception Dialog","There was exception while loading image!", e);
+            alert.showAndWait();
+            System.exit(-1);
+        }
+
+        TreeItem containingItem = new TreeItem("Contained");
+        TreeItem notContainingItem = new TreeItem("Not contained");
+        ArrayList<TreeItem> firstColumn = new ArrayList<>();
+        firstColumn.add(containingItem);
+        firstColumn.add(notContainingItem);
+        TreeItem rootItem = new TreeItem("Used characters");
+        rootItem.getChildren().addAll(firstColumn);
+        rootItem.setExpanded(true);
+        this.usedCharactersTreeView.setRoot(rootItem);
+    }
+
+    /**
+     * Method provides word from provided word base in random order. Randoms seed are actual time millis.
+     * @return word to guess from word base
+     */
+    private String getRandomWord() {
         /*        List<String> words = new ArrayList<>();
         words.add("forest");
         words.add("sword");
@@ -56,31 +81,14 @@ public class HangmanView implements Initializable {
         words.add("teczka");
 
         Random random = new Random(new Date().getTime());
-        String choosenWord = words.get(Math.abs(random.nextInt() % words.size()));
-        hangman = new Hangman(choosenWord);
-        viewWordText.setText(getWordFormatted(hangman.getViewWord()));
-        //mismatchText.setText("Mismatched count: " + hangman.getMismatchCount());
-        Image image;
-        try {
-            image = new Image(getClass().getResourceAsStream("/drawings/zero.png"));
-            imageView1.setImage(image);
-        } catch(Exception e){
-            e.printStackTrace();
-        }
-
-        TreeItem containingItem = new TreeItem("Contained");
-        TreeItem notContainingItem = new TreeItem("Not contained");
-        ArrayList<TreeItem> firstColumn = new ArrayList<>();
-        firstColumn.add(containingItem);
-        firstColumn.add(notContainingItem);
-
-        TreeItem rootItem = new TreeItem("Used characters");
-        rootItem.getChildren().addAll(firstColumn);
-        this.usedCharactersTreeView.setRoot(rootItem);
+        return words.get(Math.abs(random.nextInt() % words.size()));
     }
 
+    /**
+     * This method runs one full game logic iteration - checks input text with word, modifies it and runs refresh on whole view.
+     */
     @FXML
-    public void onGuessClick(){
+    private void onGuessClick(){
         try {
             errorText.setVisible(false);
             String text = guessedValueBox.getText();
@@ -89,7 +97,9 @@ public class HangmanView implements Initializable {
         } catch(IllegalArgumentException e){
             errorText.setVisible(true);
         } catch(Exception e){
-            e.printStackTrace();
+            Alert alert = ExceptionAlertView.getAlert("Exception Dialog","There was exception while guessing a word!", e);
+            alert.showAndWait();
+            System.exit(-1);
         }
     }
 
@@ -97,96 +107,20 @@ public class HangmanView implements Initializable {
      * Method views actual state of the game. Views hangmans image,
      * state of word, letters used to guess and how many mismatches
      * actually were made.
+     * @throws IllegalArgumentException - when mismatch in model is corrupted (value not in range 0 - 10)
      */
-    public void refreshView() {
-        Image image;
+    private void refreshView() {
         viewWordText.setText(getWordFormatted(hangman.getViewWord()));
         mismatchText.setText("Mismatched count: " + hangman.getMismatchCount());
         if(hangman.isWordGuessed()) {
-            guessedValueBox.setDisable(true);
-            guessButton.setDisable(true);
-            hangman.setGameState(HangmanGameState.FINISHED);
-            image = new Image(getClass().getResourceAsStream("/drawings/win.png"));
-            imageView1.setImage(image);
+            setGameWon();
         }
         else if(hangman.getMismatchCount() >= 0 && hangman.getMismatchCount() <= 10) {
-            String screenNumber = "";
-            switch (hangman.getMismatchCount()) {
-                case 0:
-                    screenNumber = "zero";
-                    break;
-                case 1:
-                    screenNumber = "one";
-                    break;
-                case 2:
-                    screenNumber = "two";
-                    break;
-                case 3:
-                    screenNumber = "three";
-                    break;
-                case 4:
-                    screenNumber = "four";
-                    break;
-                case 5:
-                    screenNumber = "five";
-                    break;
-                case 6:
-                    screenNumber = "six";
-                    break;
-                case 7:
-                    screenNumber = "seven";
-                    break;
-                case 8:
-                    screenNumber = "eight";
-                    break;
-                case 9:
-                    screenNumber = "nine";
-                    break;
-                case 10:
-                    screenNumber = "ten";
-                    hangman.setGameState(HangmanGameState.FINISHED);
-                    guessedValueBox.setDisable(true);
-                    guessButton.setDisable(true);
-                    break;
-            }
-            image = new Image(getClass().getResourceAsStream("/drawings/" + screenNumber + ".png"));
-            imageView1.setImage(image);
-            //todo - make tree view of "containing and missed" letters
-            usedCharactersTreeView.setRoot(getRefreshedList());
-            usedCharactersTreeView.getRoot().setExpanded(true);
-            // System.out.println("Actually used letters: " + lettersUsed);
+            setImageByMismatch();
         }
         else {
-            throw new IllegalArgumentException("Mismatch count corrupted, game is ending right now.");
+            throw new IllegalArgumentException("Mismatch count corrupted.");
         }
-    }
-
-    private TreeItem getRefreshedList() {
-        TreeItem containingItem = new TreeItem("Contained");
-        TreeItem notContainingItem = new TreeItem("Not contained");
-
-        containingItem.setExpanded(true);
-        notContainingItem.setExpanded(true);
-
-        List<TreeItem> containedUsedCharactersList = convertCharacterListToTreeItemList(hangman.getContainingUsedCharactersList());
-        List<TreeItem> notContainedUsedCharactersList = convertCharacterListToTreeItemList(hangman.getNotContainingUsedCharactersList());
-        containingItem.getChildren().addAll(containedUsedCharactersList);
-        notContainingItem.getChildren().addAll(notContainedUsedCharactersList);
-        ArrayList<TreeItem> firstColumn = new ArrayList<>();
-        firstColumn.add(containingItem);
-        firstColumn.add(notContainingItem);
-
-        TreeItem rootItem = new TreeItem("Used characters");
-        rootItem.getChildren().addAll(firstColumn);
-        return rootItem;
-    }
-
-    private List<TreeItem> convertCharacterListToTreeItemList(List<Character> characters) {
-        ArrayList<TreeItem> characterItemList = new ArrayList<>();
-        for ( Character c : characters ) {
-            characterItemList.add(new TreeItem(c.toString()));
-        }
-        return characterItemList;
     }
 
     /**
@@ -205,22 +139,114 @@ public class HangmanView implements Initializable {
     }
 
     /**
-     * Views final screen for user. In winning scenario congratulates user,
-     * tells the word and how many mismatches had player. In losing scenario
-     * displays full hangman image and informs what was the correct word.
-     * @param isWon         Flag informing if it is winning or losing scenario
-     * @param chosenWord    Word, which was to guess
-     * @param mismatchCount Count of mismatches during the game
+     * Sets game won image and sets ui in finished game state.
      */
-    public void printFinalView(boolean isWon, String chosenWord, int mismatchCount){
-        Image image;
-        if(isWon) {
-            image = new Image(getClass().getResourceAsStream("/drawings/win.png"));
+    private void setGameWon() {
+        finalizeGame();
+        try {
+            Image image = new Image(getClass().getResourceAsStream("/drawings/win.png"));
             imageView1.setImage(image);
         }
-        else{
-            image = new Image(getClass().getResourceAsStream("/drawings/ten.png"));
-            imageView1.setImage(image);
+        catch(Exception e){
+            Alert alert = ExceptionAlertView.getAlert("Exception Dialog","There was exception while loading image!", e);
+            alert.showAndWait();
+            System.exit(-1);
         }
     }
+
+    /**
+     *  Disables guessing mechanism.
+     */
+    private void finalizeGame() {
+        hangman.setGameStateFinished();
+        guessedValueBox.setDisable(true);
+        guessButton.setDisable(true);
+    }
+
+    /**
+     * Sets images due to mismatch count, when mismatch count is maximum provides finish state image and game state
+     */
+    private void setImageByMismatch() {
+        String screenNumber = "";
+        switch (hangman.getMismatchCount()) {
+            case 0:
+                screenNumber = "zero";
+                break;
+            case 1:
+                screenNumber = "one";
+                break;
+            case 2:
+                screenNumber = "two";
+                break;
+            case 3:
+                screenNumber = "three";
+                break;
+            case 4:
+                screenNumber = "four";
+                break;
+            case 5:
+                screenNumber = "five";
+                break;
+            case 6:
+                screenNumber = "six";
+                break;
+            case 7:
+                screenNumber = "seven";
+                break;
+            case 8:
+                screenNumber = "eight";
+                break;
+            case 9:
+                screenNumber = "nine";
+                break;
+            case 10:
+                screenNumber = "ten";
+                finalizeGame();
+                break;
+        }
+        try {
+            Image image = new Image(getClass().getResourceAsStream("/drawings/" + screenNumber + ".png"));
+            imageView1.setImage(image);
+            usedCharactersTreeView.setRoot(getRefreshedList());
+        }
+        catch(Exception e){
+            Alert alert = ExceptionAlertView.getAlert("Exception Dialog","There was exception while loading image!", e);
+            alert.showAndWait();
+            System.exit(-1);
+        }
+    }
+
+    /**
+     * Creates Tree Items for TreeView from used characters.
+     * @return rootItem containing used character as children
+     */
+    private TreeItem getRefreshedList() {
+        TreeItem containingItem = new TreeItem("Contained");
+        TreeItem notContainingItem = new TreeItem("Not contained");
+
+        containingItem.setExpanded(true);
+        notContainingItem.setExpanded(true);
+
+        List<TreeItem> containedUsedCharactersList = convertCharacterListToTreeItemList(hangman.getContainingUsedCharactersList());
+        List<TreeItem> notContainedUsedCharactersList = convertCharacterListToTreeItemList(hangman.getNotContainingUsedCharactersList());
+        containingItem.getChildren().addAll(containedUsedCharactersList);
+        notContainingItem.getChildren().addAll(notContainedUsedCharactersList);
+        ArrayList<TreeItem> firstColumn = new ArrayList<>();
+        firstColumn.add(containingItem);
+        firstColumn.add(notContainingItem);
+
+        TreeItem rootItem = new TreeItem("Used characters");
+        rootItem.getChildren().addAll(firstColumn);
+        rootItem.setExpanded(true);
+        return rootItem;
+    }
+
+    private List<TreeItem> convertCharacterListToTreeItemList(List<Character> characters) {
+        ArrayList<TreeItem> characterItemList = new ArrayList<>();
+        for ( Character c : characters ) {
+            characterItemList.add(new TreeItem(c.toString()));
+        }
+        return characterItemList;
+    }
+
 }

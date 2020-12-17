@@ -13,7 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
  * UsedCharactersList adding and formatting on toString tests
  */
 class UsedCharactersListTest {
-    UsedCharactersList usedCharactersList = new UsedCharactersList();
+
+    private final UsedCharactersList usedCharactersList = new UsedCharactersList();
 
     @ParameterizedTest
     @CsvSource({"a,b,c,d","c,d,q,r"})

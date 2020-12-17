@@ -6,6 +6,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Hangman model tests on all business logic
+ */
 class HangmanTest {
 
     private final Hangman hangman = new Hangman("abcdefghijklmn");

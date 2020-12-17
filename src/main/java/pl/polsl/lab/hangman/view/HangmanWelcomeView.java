@@ -5,13 +5,15 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import pl.polsl.lab.hangman.Application;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class HangmanWelcomeViewController implements Initializable {
+public class HangmanWelcomeView implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -20,7 +22,6 @@ public class HangmanWelcomeViewController implements Initializable {
     @FXML
     public void onStartButtonClicked() {
         try {
-            System.out.println("Clicked start :)");
             Stage stage = new Stage();
             stage.setTitle("Pawel Potuczko");
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("HangmanView.fxml"));
@@ -30,7 +31,9 @@ public class HangmanWelcomeViewController implements Initializable {
             stage.show();
             Application.stg.close();
         } catch(Exception e){
-            e.printStackTrace();
+            Alert alert = ExceptionAlertView.getAlert("Exception Dialog","There was exception while loading main window!", e);
+            alert.showAndWait();
+            System.exit(-1);
         }
     }
 }

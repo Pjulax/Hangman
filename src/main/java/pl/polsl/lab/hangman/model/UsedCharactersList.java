@@ -27,7 +27,7 @@ class UsedCharactersList {
             lettersContained.add(character);
             lettersContained.sort(Character::compareTo);
         }
-        else if (!lettersNotContained.contains(character)){
+        else if (!isWordContaining && !lettersNotContained.contains(character)){
             lettersNotContained.add(character);
             lettersNotContained.sort(Character::compareTo);
         }

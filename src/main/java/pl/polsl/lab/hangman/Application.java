@@ -24,34 +24,14 @@ public class Application extends javafx.application.Application {
      * @param args  Are not used
      */
     public static void main(String[] args) {
-
-
         launch(args);
-
-//        try {
-//            hangmanController.printFirstView();
-//
-//            do {
-//                hangmanController.refresh();
-//                hangmanController.guess();
-//                hangmanController.checkIfGameIsComplete();
-//            } while (hangmanController.getHangmanGameState().equals(HangmanGameState.IN_PROGRESS));
-//
-//            hangmanController.printFinalView();
-//
-//            System.out.println("Press enter key to close application.");
-//            new Scanner(System.in).nextLine();
-//        }
-//        catch (IllegalArgumentException | IOException ex){
-//            System.out.println(ex.getMessage());
-//        }
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         stg = stage;
         stage.setTitle("Pawel Potuczko");
-        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("view/HangmanWelcomeView" + ".fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(Application.class.getResource("view/HangmanWelcomeView.fxml"));
         Parent root = fxmlLoader.load();
 
         stage.setScene(new Scene(root, 800,600));

@@ -29,10 +29,7 @@ public class Hangman {
      * @return  Hidden word string
      */
     private String initViewWord(String chosenWord){
-        StringBuilder viewWordBuilder = new StringBuilder();
-        for(int i = 0; i < chosenWord.length(); i++)
-            viewWordBuilder.append("_");
-        return viewWordBuilder.toString();
+        return "_".repeat(chosenWord.length());
     }
 
     /**
@@ -131,7 +128,7 @@ public class Hangman {
         return viewWord;
     }
 
-    public String getChosenWord() {
+    String getChosenWord() {
         return chosenWord;
     }
 
@@ -143,7 +140,7 @@ public class Hangman {
     }
 
     /**
-     * @return list of contained in word  used characters
+     * @return list of contained in word used characters
      */
     public List<Character> getContainingUsedCharactersList(){
         return usedCharacters.getLettersContained();
@@ -155,6 +152,7 @@ public class Hangman {
     public List<Character> getNotContainingUsedCharactersList(){
         return usedCharacters.getLettersNotContained();
     }
+
     public Integer getMismatchCount() {
         return mismatchCount;
     }
@@ -163,7 +161,10 @@ public class Hangman {
         return gameState;
     }
 
-    public void setGameState(HangmanGameState gameState) {
-        this.gameState = gameState;
+    /**
+     * Changes state of game to finished.
+     */
+    public void setGameStateFinished() {
+        this.gameState = HangmanGameState.FINISHED;
     }
 }
