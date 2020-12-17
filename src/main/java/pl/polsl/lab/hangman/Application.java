@@ -10,17 +10,14 @@ import javafx.stage.Stage;
  * Game ends if user guess the word or mismatch ten times. Special behavior comes if
  * user sends end of transmission character, that will provide applications end.
  * @author Pawel Potuczko
- * @version 1.0
+ * @version 3.0
  */
 public class Application extends javafx.application.Application {
 
     public static Stage stg;
 
     /**
-     * In main are initialized words table, model, view and controllers. Word to guess
-     * is randomly picked from table. HangmanController is used as main controller
-     * in game loop, which is refreshing view, taking users input and checking state
-     * of game.
+     * main only launches java fx application.
      * @param args  Are not used
      */
     public static void main(String[] args) {

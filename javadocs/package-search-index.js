@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"l":"pl.polsl.lab.hangman"},{"l":"pl.polsl.lab.hangman.contoller"},{"l":"pl.polsl.lab.hangman.model"},{"l":"pl.polsl.lab.hangman.utils"},{"l":"pl.polsl.lab.hangman.view"}]
+packageSearchIndex = [{"l":"All Packages","url":"allpackages-index.html"},{"m":"Hangman","l":"pl.polsl.lab.hangman"},{"m":"Hangman","l":"pl.polsl.lab.hangman.model"},{"m":"Hangman","l":"pl.polsl.lab.hangman.utils"},{"m":"Hangman","l":"pl.polsl.lab.hangman.view"}]

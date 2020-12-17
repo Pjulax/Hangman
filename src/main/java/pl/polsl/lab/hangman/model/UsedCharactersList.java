@@ -21,6 +21,7 @@ class UsedCharactersList {
     /**
      * Adds character to letters list, if character already is in list, doesn't add it again.
      * @param character Character to add
+     * @param isWordContaining flag if word is containing this character
      */
     public void addUsedCharacter(Character character, boolean isWordContaining){
         if (isWordContaining && !lettersContained.contains(character)) {
